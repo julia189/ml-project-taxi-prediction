@@ -22,7 +22,7 @@ def adjust_datatypes(data):
     data['TIMESTAMP_DT'] = data['TIMESTAMP'].apply(lambda value_unix: 
                                                    datetime.fromtimestamp(value_unix).strftime('%Y-%m-%d %H:%M:%S'))
     data.TIMESTAMP_DT = pd.to_datetime(data.TIMESTAMP_DT)
-    data['POLYLINE_LIST'] = data['POLYLINE'].apply(lambda value: json.loads(value))
+    data['POLYLINE'] = data['POLYLINE'].apply(lambda value: json.loads(value))
     return data
 
 

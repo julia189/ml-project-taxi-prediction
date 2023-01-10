@@ -20,8 +20,8 @@ def split_lat_lon(data):
                                                       if value_[0]%2 != 0]))
     return data
 def create_fix_length_sequences(data, n_limited):
-    data['START_SEQUENCE'] = data.sequence.apply(lambda sequence: sequence[0:2*n_limited])
-    data['STOP_SEQUENCE'] = data.sequence.apply(lambda sequence: sequence[-2*n_limited:])
+    data['START_SEQUENCE'] = data.SEQUENCE.apply(lambda sequence: sequence[0:2*n_limited])
+    data['STOP_SEQUENCE'] = data.SEQUENCE.apply(lambda sequence: sequence[-2*n_limited:])
     return data
     
 def calculate_POLYLINE_features(data):

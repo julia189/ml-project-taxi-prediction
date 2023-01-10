@@ -57,24 +57,25 @@ def reduce_high_cardinality(data, columns=[]):
         data[str(column_)+ '_agg'] = data[str(column_)+ '_agg'].astype(str)
     return data
 
-def feature_encoding_oh(data, categories_oh):
-    from sklearn.preprocessing import OneHotEncoder
-    data_encoded = pd.DataFrame()
-    for attribute_ in categories_oh:
-        enc = OneHotEncoder()
-        fenc = enc.fit_transform(X=data[str(attribute_)].values.reshape(-1,1)).toarray()
-        df_fenc = pd.DataFrame(fenc, columns=enc.categories_)
-        data_encoded = pd.concat([df_fenc, data_encoded], axis=1)
-    return data_encoded
-        
-
 def feature_encoding_oe(data, categories_oe):
     from sklearn.preprocessing import OrdinalEncoder
     data_encoded = pd.DataFrame()
     for attribute_ in categories_oe:
         enc = OrdinalEncoder()
         fenc = enc.fit_transform(X=data[str(attribute_)].values.reshape(-1,1))
+        #print(fenc)
         df_fenc = pd.DataFrame(fenc, columns=[str(attribute_)+'_OE'])
+        data_encoded = pd.concat([df_fenc, data_encoded], axis=1)
+    return data_encoded
+
+def feature_encoding_oh(data, categories_oh):
+    from sklearn.preprocessing import OneHotEncoder
+    data_encoded = pd.DataFrame()
+    for attribute_ in categories_oh:
+        enc = OneHotEncoder()
+        fenc = enc.fit_transform(X=data[str(attribute_)].values.reshape(-1,1)).toarray()
+
+        df_fenc = pd.DataFrame(fenc, columns=enc.categories_[0])
         data_encoded = pd.concat([df_fenc, data_encoded], axis=1)
     return data_encoded
 

@@ -12,10 +12,10 @@ import boto3
 import sagemaker
 
 def split_lat_lon(data):
-    data['LON_ARRAY'] = data.SEQUENCE.apply(lambda sequence_:
+    data['LON_SEQUENCE'] = data.SEQUENCE.apply(lambda sequence_:
                                             np.array([value_[1] for value_ in enumerate(sequence_) 
                                                       if value_[0]%2 == 0]))
-    data['LAT_ARRA'] = data.SEQUENCE.apply(lambda sequence_:
+    data['LAT_SEQUENCE'] = data.SEQUENCE.apply(lambda sequence_:
                                             np.array([value_[1] for value_ in enumerate(sequence_) 
                                                       if value_[0]%2 != 0]))
     return data
@@ -51,7 +51,7 @@ def filter_invalid_trips(data):
 
 
 def haversine_distance(lat1, lat2, lon1, lon2):
-    #analog to following source -> https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.haversine_distances.html
+    #analog to following source -> https://scikit- learn.org/stable/modules/generated/sklearn.metrics.pairwise.haversine_distances.html
     from sklearn.metrics.pairwise import haversine_distances
     from math import radians
     point_A = [lon1, lat1] 

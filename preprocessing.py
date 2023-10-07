@@ -12,42 +12,47 @@ import boto3
 import sagemaker
 
 def split_lat_lon(data):
-    data['LON_SEQUENCE'] = data.SEQUENCE.apply(lambda sequence_:
-                                            np.array([value_[1] for value_ in enumerate(sequence_) 
+    modified_data = data.copy()
+    modified_data['LON_SEQUENCE'] = modified_data.SEQUENCE.apply(lambda sequence_:
+                                            np.array([value_[1] for value_ in enumerate(sequence_)
                                                       if value_[0]%2 == 0]))
-    data['LAT_SEQUENCE'] = data.SEQUENCE.apply(lambda sequence_:
-                                            np.array([value_[1] for value_ in enumerate(sequence_) 
+    modified_data['LAT_SEQUENCE'] = modified_data.SEQUENCE.apply(lambda sequence_:
+                                            np.array([value_[1] for value_ in enumerate(sequence_)
                                                       if value_[0]%2 != 0]))
-    return data
+    return modified_data
+
 def create_fix_length_sequences(data, n_limited):
-    data['START_SEQUENCE'] = data.SEQUENCE.apply(lambda sequence: sequence[0:2*n_limited])
-    data['STOP_SEQUENCE'] = data.SEQUENCE.apply(lambda sequence: sequence[-2*n_limited:])
-    return data
+    modified_data = data.copy()
+    modified_data['START_SEQUENCE'] = modified_data.SEQUENCE.apply(lambda sequence: sequence[0:2 * n_limited])
+    modified_data['STOP_SEQUENCE'] = modified_data.SEQUENCE.apply(lambda sequence: sequence[-2 * n_limited:])
+    return modified_data
     
 def calculate_POLYLINE_features(data):
     """
     calculates length of POLYLINE as N_COORDINATE_POINTS
     calculates total flight time in seconds and minutes as TOTAL_FLIGHT_TIME_SECONDS and TOTAL_FLIGHT_TIME_MINUTES
     """
-    data['N_COORDINATE_POINTS'] = data['POLYLINE'].apply(lambda value: len(value))
+    modified_data = data.copy()
+    modified_data['N_COORDINATE_POINTS'] = modified_data['POLYLINE'].apply(lambda value: len(value))
     #total flight time
-    data['TOTAL_FLIGHT_TIME_SECONDS'] = data.apply(lambda row: (row.N_COORDINATE_POINTS-1)*15, axis=1)
-    data['TOTAL_FLIGHT_TIME_MINUTES'] = data.TOTAL_FLIGHT_TIME_SECONDS / 60
-    return data
+    modified_data['TOTAL_FLIGHT_TIME_SECONDS'] = modified_data.apply(lambda row: (row.N_COORDINATE_POINTS - 1) * 15, axis=1)
+    modified_data['TOTAL_FLIGHT_TIME_MINUTES'] = modified_data.TOTAL_FLIGHT_TIME_SECONDS / 60
+    return modified_data
 
 def filter_invalid_trips(data):
     """
     filters trips with less than 10 coordinate points and takes data sample with longest POLYLINE for duplicated TRIP IDs
     """
-    data = data[data.N_COORDINATE_POINTS >= 10]
-    vc = data.TRIP_ID.value_counts().reset_index()
+    modified_data = data.copy()
+    modified_data = modified_data[modified_data.N_COORDINATE_POINTS >= 10]
+    vc = modified_data.TRIP_ID.value_counts().reset_index()
     DUPLICATES_IDs = vc[vc.TRIP_ID > 1]['index'].unique()
     if len(DUPLICATES_IDs) > 0:
-        data_duplicated = data[data.TRIP_ID.isin(DUPLICATES_IDs)]
-        data_valid = data[~data.TRIP_ID.isin(DUPLICATES_IDs)]
+        data_duplicated = modified_data[modified_data.TRIP_ID.isin(DUPLICATES_IDs)]
+        data_valid = modified_data[~modified_data.TRIP_ID.isin(DUPLICATES_IDs)]
         data_filtered = data_duplicated.groupby('TRIP_ID').apply(lambda datachunk: datachunk[datachunk.N_COORDINATE_POINTS == datachunk.N_COORDINATE_POINTS.max()])
-        data = pd.concat([data_filtered,data_valid],axis=0)
-    return data
+        modified_data = pd.concat([data_filtered, data_valid], axis=0)
+    return modified_data
 
 
 def haversine_distance(lat1, lat2, lon1, lon2):
@@ -63,14 +68,15 @@ def haversine_distance(lat1, lat2, lon1, lon2):
     return result[0][1]
 
 def calculate_total_distance(data):
-    data['START_POINT'] = data['POLYLINE'].apply(lambda value: value[0])
-    data['DEST_POINT'] = data['POLYLINE'].apply(lambda value: value[-1])   
-    data['TOTAL_DISTANCE_KM'] = data.apply(lambda row:
+    modified_data = data.copy()
+    modified_data['START_POINT'] = modified_data['POLYLINE'].apply(lambda value: value[0])
+    modified_data['DEST_POINT'] = modified_data['POLYLINE'].apply(lambda value: value[-1])
+    modified_data['TOTAL_DISTANCE_KM'] = modified_data.apply(lambda row:
                                        haversine_distance(lat1=row.START_POINT[1],
                                                 lat2=row.DEST_POINT[1],
                                                 lon1=row.START_POINT[0],
                                                 lon2=row.DEST_POINT[0])
                                         ,axis=1
                                        )
-    return data
+    return modified_data
     

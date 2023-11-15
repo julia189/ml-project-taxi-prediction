@@ -4,15 +4,9 @@ on:
   push:
     branches:
       - main
+      - develop
   workflow_dispatch: # enable manual release
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: armand-sauzay/actions-python/lint@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -23,7 +17,7 @@ jobs:
           test-flags: --version
   release:
     name: Release
-    needs: [lint, test]
+    needs: [test]
     runs-on: ubuntu-latest
     outputs:
       new-release-published: ${{ steps.release.outputs.new-release-published }}

@@ -1,9 +1,9 @@
 from math import radians
 
+import geojson
 import numpy as np
 import pandas as pd
 from sklearn.metrics.pairwise import haversine_distances
-import geojson
 
 
 def convert_string_to_geojson(value: str) -> list:
@@ -11,9 +11,13 @@ def convert_string_to_geojson(value: str) -> list:
     return json_string
 
 
-def convert_polyline_to_geojson_format(data: pd.DataFrame, name_column: str) -> pd.DataFrame:
+def convert_polyline_to_geojson_format(
+    data: pd.DataFrame, name_column: str
+) -> pd.DataFrame:
     current_df = data.copy()
-    current_df[name_column] = current_df[name_column].apply(lambda row_: convert_string_to_geojson(row_), axis=0)
+    current_df[name_column] = current_df[name_column].apply(
+        lambda row_: convert_string_to_geojson(row_), axis=0
+    )
     return current_df
 
 
@@ -35,10 +39,10 @@ def split_lat_lon(data):
 def create_fix_length_sequences(data, n_limited) -> pd.DataFrame:
     modified_data = data.copy()
     modified_data["START_SEQUENCE"] = modified_data.SEQUENCE.apply(
-        lambda sequence: sequence[0: 2 * n_limited]
+        lambda sequence: sequence[0 : 2 * n_limited]
     )
     modified_data["STOP_SEQUENCE"] = modified_data.SEQUENCE.apply(
-        lambda sequence: sequence[-2 * n_limited:]
+        lambda sequence: sequence[-2 * n_limited :]
     )
     return modified_data
 
@@ -58,7 +62,7 @@ def filter_invalid_trips(data: pd.DataFrame, n_points: int) -> pd.DataFrame:
         filtered_data = duplicated_data.groupby("TRIP_ID").apply(
             lambda data_chunk: data_chunk[
                 data_chunk.N_COORDINATE_POINTS == data_chunk.N_COORDINATE_POINTS.max()
-                ]
+            ]
         )
         modified_data = pd.concat([filtered_data, valid_data], axis=0)
     return modified_data

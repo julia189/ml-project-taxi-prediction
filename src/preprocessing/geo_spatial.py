@@ -1,16 +1,22 @@
+from math import radians
+
 import geojson
 import pandas as pd
 from sklearn.metrics.pairwise import haversine_distances
-from math import radians
+
 
 def convert_string_to_geojson(value: str) -> list:
     json_string = geojson.loads(value)
     return json_string
 
 
-def convert_polyline_to_geojson_format(data: pd.DataFrame, name_column: str) -> pd.DataFrame:
+def convert_polyline_to_geojson_format(
+    data: pd.DataFrame, name_column: str
+) -> pd.DataFrame:
     current_df = data.copy()
-    current_df[name_column] = current_df[name_column].apply(lambda row_: convert_string_to_geojson(row_))
+    current_df[name_column] = current_df[name_column].apply(
+        lambda row_: convert_string_to_geojson(row_)
+    )
     return current_df
 
 
@@ -51,7 +57,6 @@ def haversine_distance(lat1, lat2, lon1, lon2) -> float:
     result = haversine_distances([point1_in_radians, point2_in_radians])
     result = result * 6371000 / 1000
     return result[0][1]
-
 
 
 def calculate_total_distance(data) -> pd.DataFrame:

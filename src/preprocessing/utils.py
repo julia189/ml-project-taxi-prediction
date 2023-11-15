@@ -1,6 +1,7 @@
 import datetime
 import json
 from datetime import datetime
+
 import numpy as np
 import pandas as pd
 
@@ -16,14 +17,16 @@ def convert_string_to_json(value: str) -> str:
 
 def convert_datatypes(data: pd.DataFrame, columns_datatypes_dict: dict) -> pd.DataFrame:
     for key, value in columns_datatypes_dict.items():
-        if value == 'int':
+        if value == "int":
             data[key] = data[key].astype(int)
-        elif value == 'object':
+        elif value == "object":
             data[key] = data[key].astype(object)
-        elif value == 'datetime':
+        elif value == "datetime":
             data[key] = data[key].apply(
-            lambda value_unix: datetime.fromtimestamp(value_unix).strftime("%Y-%m-%d %H:%M:%S"
-            ))
+                lambda value_unix: datetime.fromtimestamp(value_unix).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+            )
     return data
 
 
@@ -31,7 +34,7 @@ def extend_timestamps(data):
     data["TIMESTAMP_MONTH"] = pd.to_datetime(data["TIMESTAMP_DT"]).dt.month
     data["TIMESTAMP_YEAR"] = pd.to_datetime(data["TIMESTAMP_DT"]).dt.year
     data["YEAR_MONTH"] = (
-            data["TIMESTAMP_YEAR"].astype(str) + "_" + data["TIMESTAMP_MONTH"].astype(str)
+        data["TIMESTAMP_YEAR"].astype(str) + "_" + data["TIMESTAMP_MONTH"].astype(str)
     )
     return data
 

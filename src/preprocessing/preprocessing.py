@@ -38,17 +38,18 @@ def calculate_polyline_features(data) -> pd.DataFrame:
 
 def filter_invalid_trips(data, n_points: int) -> pd.DataFrame:
     """
-    filters trips with less than 10 coordinate points and takes data sample with longest POLYLINE for duplicated TRIP IDs
+    filters trips with less than 10 coordinate points and takes data sample with longest 
+    POLYLINE for duplicated TRIP IDs
     """
     modified_data = data.copy()
     modified_data = modified_data[modified_data.N_COORDINATE_POINTS >= n_points]
     vc = modified_data.TRIP_ID.value_counts().reset_index()
-    DUPLICATES_IDs = vc[vc['count'] > 1].TRIP_ID.unique()
-    if len(DUPLICATES_IDs) > 0:
-        duplicated_data = modified_data[modified_data.TRIP_ID.isin(DUPLICATES_IDs)]
-        valid_data = modified_data[~modified_data.TRIP_ID.isin(DUPLICATES_IDs)]
+    duplicated_ids = vc[vc['count'] > 1].TRIP_ID.unique()
+    if len(duplicated_ids) > 0:
+        duplicated_data = modified_data[modified_data.TRIP_ID.isin(duplicated_ids)]
+        valid_data = modified_data[~modified_data.TRIP_ID.isin(duplicated_ids)]
         filtered_data = duplicated_data.groupby('TRIP_ID').apply(
-            lambda datachunk: datachunk[datachunk.N_COORDINATE_POINTS == datachunk.N_COORDINATE_POINTS.max()])
+            lambda data_chunk: data_chunk[data_chunk.N_COORDINATE_POINTS == data_chunk.N_COORDINATE_POINTS.max()])
         modified_data = pd.concat([filtered_data, valid_data], axis=0)
     return modified_data
 
@@ -81,7 +82,7 @@ def calculate_total_distance(data) -> pd.DataFrame:
                                                              haversine_distance(lat1=row.START_POINT[1],
                                                                                 lat2=row.DEST_POINT[1],
                                                                                 lon1=row.START_POINT[0],
-                                                                                lon2=row.DEST_POINT[0])
-                                                             , axis=1
+                                                                                lon2=row.DEST_POINT[0]),
+                                                             axis=1
                                                              )
     return modified_data

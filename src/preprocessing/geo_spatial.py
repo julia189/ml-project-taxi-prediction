@@ -1,5 +1,6 @@
 from geojson import LineString
 from src.utils import utils
+import pandas as pd
 
 def convert_string_to_geojson(value: str) -> list:
     json_string = geojson.loads(value)

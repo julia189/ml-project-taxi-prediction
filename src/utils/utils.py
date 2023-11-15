@@ -1,13 +1,17 @@
 import datetime
 import json
 from datetime import datetime
-
 import numpy as np
 import pandas as pd
 
 
 def print_sample_size(data, add_text=""):
     print(f"{add_text} Size data samples {data.shape[0]}")
+
+
+def convert_string_to_json(value: str) -> str:
+    json_formatted_string = json.loads(value)
+    return json_formatted_string
 
 
 def adjust_datatypes(data, skip_polyline=False, skip_timestamp=False):
@@ -36,7 +40,7 @@ def extend_timestamps(data):
     data["TIMESTAMP_MONTH"] = pd.to_datetime(data["TIMESTAMP_DT"]).dt.month
     data["TIMESTAMP_YEAR"] = pd.to_datetime(data["TIMESTAMP_DT"]).dt.year
     data["YEAR_MONTH"] = (
-        data["TIMESTAMP_YEAR"].astype(str) + "_" + data["TIMESTAMP_MONTH"].astype(str)
+            data["TIMESTAMP_YEAR"].astype(str) + "_" + data["TIMESTAMP_MONTH"].astype(str)
     )
     return data
 

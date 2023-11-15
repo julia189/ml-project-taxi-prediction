@@ -6,7 +6,7 @@ provider "aws" {
 resource "aws_glue_job" "this" {
     name = "preprocessing-etl"
     role_arn = var.gluerole
-    max_capacigty = 1
+    max_capacity = 1
     glue_version = "4.0"
 
  default_arguments = {
@@ -16,7 +16,6 @@ resource "aws_glue_job" "this" {
 
  command {
     name = "glueetl"
-    script_location = ""
+
  }
 }
-

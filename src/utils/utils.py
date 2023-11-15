@@ -14,25 +14,16 @@ def convert_string_to_json(value: str) -> str:
     return json_formatted_string
 
 
-def adjust_datatypes(data, skip_polyline=False, skip_timestamp=False):
-    """
-    adjust to appropriate datatypes
-    """
-    data.TRIP_ID = data.TRIP_ID.astype(object)
-    data.CALL_TYPE = data.CALL_TYPE.astype(object)
-    data.ORIGIN_STAND = data.ORIGIN_STAND.astype(object)
-    data.ORIGIN_CALL = data.ORIGIN_CALL.astype(object)
-    data.TAXI_ID = data.TAXI_ID.astype(object)
-
-    if not skip_timestamp:
-        data["TIMESTAMP_DT"] = data["TIMESTAMP"].apply(
-            lambda value_unix: datetime.fromtimestamp(value_unix).strftime(
-                "%Y-%m-%d %H:%M:%S"
-            )
-        )
-        data.TIMESTAMP_DT = pd.to_datetime(data.TIMESTAMP_DT)
-    if not skip_polyline:
-        data["POLYLINE"] = data["POLYLINE"].apply(lambda value: json.loads(value))
+def convert_datatypes(data: pd.DataFrame, columns_datatypes_dict: dict) -> pd.DataFrame:
+    for key, value in columns_datatypes_dict.items():
+        if value == 'int':
+            data[key] = data[key].astype(int)
+        elif value == 'object':
+            data[key] = data[key].astype(object)
+        elif value == 'datetime':
+            data[key] = data[key].apply(
+            lambda value_unix: datetime.fromtimestamp(value_unix).strftime("%Y-%m-%d %H:%M:%S"
+            ))
     return data
 
 

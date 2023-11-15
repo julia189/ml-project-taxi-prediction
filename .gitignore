@@ -136,3 +136,6 @@ dmypy.json
 
 /ml_pipeline/glue/trigger/.terraform/
 /ml_pipeline/glue/crawler/.terraform/
+/ml_pipeline/glue/trigger/.terraform.lock.hcl
+/ml_pipeline/glue/crawler/.terraform.lock.hcl
+

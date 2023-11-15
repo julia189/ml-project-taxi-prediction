@@ -1,9 +1,9 @@
 provider "aws" {
-  region  = "eu-west-1"
+  region  = var.region
   profile = var.profile
 }
 
-resource "aws_glue_job" "this" {
+resource "aws_glue_job" "preprocessing-etl" {
     name = "preprocessing-etl"
     role_arn = var.gluerole
     max_capacity = 1
@@ -11,11 +11,12 @@ resource "aws_glue_job" "this" {
 
  default_arguments = {
  "--enable-job-insights" = "true",
-
+ "--additional-python-modules" = ""
  }
 
  command {
     name = "glueetl"
+     script_location = ""
 
  }
 }

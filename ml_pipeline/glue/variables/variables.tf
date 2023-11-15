@@ -8,6 +8,11 @@ variable "crawlername" {
     default = "raw-data-crawler"
 }
 
+variable "jobname" {
+    type = string
+    default = "raw-data-glue-job"
+}
+
 variable "gluerole" {
     type = string
     default = "arn:aws:iam::177474864456:role/service-role/AWSGlueServiceRole"

@@ -56,18 +56,21 @@ def haversine_distance(lat1, lat2, lon1, lon2) -> float:
 
 def calculate_total_distance(data) -> pd.DataFrame:
     modified_data = data.copy()
-    modified_data["START_POINT"] = modified_data["POLYLINE"].apply(
+    modified_data["start_point"] = modified_data["polyline"].apply(
         lambda value: value[0]
     )
-    modified_data["DEST_POINT"] = modified_data["POLYLINE"].apply(
+    modified_data["dest_point"] = modified_data["polyline"].apply(
         lambda value: value[-1]
     )
-    modified_data["TOTAL_DISTANCE_KM"] = modified_data.apply(
+    modified_data["final_point"] = modified_data["polyline"].apply(
+        lambda value: value[-2]
+    )
+    modified_data["total_distance_km"] = modified_data.apply(
         lambda row: haversine_distance(
-            lat1=row.START_POINT[1],
-            lat2=row.DEST_POINT[1],
-            lon1=row.START_POINT[0],
-            lon2=row.DEST_POINT[0],
+            lat1=row.start_point[0],
+            lat2=row.final_point[0],
+            lon1=row.start_point[1],
+            lon2=row.final_point[1],
         ),
         axis=1,
     )

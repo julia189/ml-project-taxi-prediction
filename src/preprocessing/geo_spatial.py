@@ -27,7 +27,7 @@ def calculate_polyline_features(data: pd.DataFrame) -> pd.DataFrame:
     """
     modified_data = data.copy()
     modified_data["n_coordinate_points"] = modified_data["polyline"].apply(
-        lambda value: len(value)
+        lambda value: len(value[:-1])
     )
     # total flight time
     modified_data["total_flight_time_seconds"] = modified_data.apply(
@@ -67,6 +67,7 @@ def calculate_total_distance(data) -> pd.DataFrame:
     modified_data["dest_point"] = modified_data["polyline"].apply(
         lambda value: value[-1]
     )
+    # point before last point as last point will be base for label
     modified_data["final_point"] = modified_data["polyline"].apply(
         lambda value: value[-2]
     )

@@ -19,6 +19,8 @@ geojson = "^3.1.0"
 imblearn = "^0.0"
 matplotlib = "^3.8.1"
 seaborn = "^0.13.0"
+pyspark = "^3.5.0"
+boto3 = "^1.29.2"
 
 
 [tool.poetry.group.test.dependencies]

@@ -128,3 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .idea/
+ml_pipeline/glue/crawler/.terraform.lock.hcl
+ml_pipeline/glue/crawler/.terraform/providers/registry.terraform.io/hashicorp/aws/5.25.0/darwin_arm64/terraform-provider-aws_v5.25.0_x5
+ml_pipeline/glue/trigger/.terraform.lock.hcl
+ml_pipeline/glue/trigger/.terraform/providers/registry.terraform.io/hashicorp/aws/5.25.0/darwin_arm64/terraform-provider-aws_v5.25.0_x5

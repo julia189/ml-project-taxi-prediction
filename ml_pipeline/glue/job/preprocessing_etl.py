@@ -50,8 +50,8 @@ try:
             partition_cols=["taxi_id"]
         )
 
-except Exception:
-    logging.exception("read_missing_parts_sql_query")
+except Exception as e:
+    logging.exception("Failed when executing query with error:" , e)
 
 print(f"Number of rows: {current_df.shape[0]}")
 print(f"Data table queried at {datetime.now()}")

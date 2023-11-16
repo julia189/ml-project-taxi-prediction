@@ -878,6 +878,16 @@ files = [
 ]
 
 [[package]]
+name = "logging"
+version = "0.4.9.6"
+description = "A logging module for Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "logging-0.4.9.6.tar.gz", hash = "sha256:26f6b50773f085042d301085bd1bf5d9f3735704db9f37c1ce6d8b85c38f2417"},
+]
+
+[[package]]
 name = "matplotlib"
 version = "3.8.1"
 description = "Python plotting package"
@@ -2126,4 +2136,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.13"
-content-hash = "3b51b53cc30e63a90b48b35a15d57fd6e55b8a434362c0d3d21ac7a350638d7c"
+content-hash = "da709b747b7667beb6072b545057c938feba299f67f1ec12ca34614a776afb0e"

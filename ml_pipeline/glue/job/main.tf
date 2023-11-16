@@ -1,6 +1,6 @@
 provider "aws" {
   region  = var.region
-  profile = var.profile
+  profile = var.awsprofile
 }
 
 resource "aws_glue_job" "preprocessing-etl" {
@@ -17,6 +17,6 @@ resource "aws_glue_job" "preprocessing-etl" {
 
  command {
     name = "glueetl"
-     script_location = "ml_pipeline/glue/job/preprocessing_etl.py"
+    script_location = "ml_pipeline/glue/job/preprocessing_etl.py"
  }
 }

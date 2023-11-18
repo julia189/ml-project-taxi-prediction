@@ -15,3 +15,7 @@ module "job" {
 module "trigger" {
     source = "./glue/trigger"
 }
+
+module "sagemaker_config" {
+    source = ".infrastructue/sagemaker_config"
+}

@@ -15,7 +15,7 @@ variable "jobname" {
 
 variable "gluerole" {
     type = string
-    default = "arn:aws:iam::177474864456:role/service-role/AWSGlueServiceRole"
+    default = "arn:aws:iam::342774253254:role/service-role/AWSGlueServiceRole"
 }
 
 variable "region" {

@@ -12,12 +12,12 @@ resource "aws_glue_job" "preprocessing-etl" {
  default_arguments = {
  "--enable-job-insights" = "true",
  "--additional-python-modules" = "logging==0.4.9.6,datetime==5.3",
- "--extra-py-files" = "",
+ "--extra-py-files" = "src/preprocessing/dist/data_ingestion-1.0-py3-none-any.whl",
  }
 
  command {
     name = "glueetl"
     # update file: aws s3 cp /Users/Q619505/PycharmProjects/ml-project-taxi-prediction/ml_pipeline/glue/job/preprocessing_etl.py 
-    script_location = "ml_pipeline/glue/job/preprocessing_etl.py"
+    script_location = "s3://etl-glue-job-scripts/scripts/preprocessing_etl.py"
  }
 }

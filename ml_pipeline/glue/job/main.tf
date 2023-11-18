@@ -17,6 +17,7 @@ resource "aws_glue_job" "preprocessing-etl" {
 
  command {
     name = "glueetl"
+    # update file: aws s3 cp /Users/Q619505/PycharmProjects/ml-project-taxi-prediction/ml_pipeline/glue/job/preprocessing_etl.py 
     script_location = "ml_pipeline/glue/job/preprocessing_etl.py"
  }
 }

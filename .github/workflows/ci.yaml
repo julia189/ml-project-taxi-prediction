@@ -12,3 +12,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           test-flags: --version
+  etl-job:
+    name: Etl_Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run file upload for etl job
+        uses: ./scripts/upload-to-s3.sh
+         

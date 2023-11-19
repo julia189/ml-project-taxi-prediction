@@ -19,7 +19,7 @@ job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 
 
-client = boto3.client("athena", region_name='eu-west-1')
+athena_client = boto3.client("athena", region_name='eu-west-1')
 output_path = "s3://athena-query-results-default-thinktank/"
 db = "default"
 env = args.get("env", "dev")
@@ -65,15 +65,18 @@ def athena_query(client, query_string, database_name, output_path, max_execution
     return pd.DataFrame()
 
 try:
+    
     sql_query_partitions = "SELECT distinct(taxi_id) FROM raw_data"
     sql_main_query = "SELECT * FROM raw_data WHERE taxi_id = 'current_taxi_id'"
-    partitions_df = athena_query(client=client,
+    logger.info("Executing first query")
+    partitions_df = athena_query(client=athena_client,
                                  query_string=sql_query_partitions,
                                  database_name=db,
                                  output_path=output_path,
                                  max_execution_sec=60)
+    logger.info("Executing second query")
     for partition_ in list(partitions_df):
-        current_df = athena_query(client=client,
+        current_df = athena_query(client=athena_client,
                         query_string=Template(sql_main_query).substitute(current_taxi_id=partition_),
                         database_name=db,
                         output_path=output_path,

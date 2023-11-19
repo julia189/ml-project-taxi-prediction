@@ -10,12 +10,17 @@ from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
 
-args = getResolvedOptions(sys.argv, ["JOB_NAME"])
 sc = SparkContext()
 glueContext = GlueContext(sc)
 spark = glueContext.spark_session
 logger = glueContext.get_logger()
 job = Job(glueContext)
+optional_params = ["bucket", "prefix", "env"]
+given_params = []
+for param_ in optional_params:
+    if '--{}'.format(param_) in sys.argv:
+        given_params.append(param_)
+args = getResolvedOptions(sys.argv, ["JOB_NAME"] + given_params)
 job.init(args["JOB_NAME"], args)
 
 
@@ -92,3 +97,4 @@ try:
 except Exception as e:
     logger.error("Failed when executing query with error:" , e)
 
+job.commit()

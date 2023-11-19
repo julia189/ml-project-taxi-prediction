@@ -2,7 +2,7 @@ import sys
 import datetime
 import boto3
 import time
-import logging
+import pandas as pd
 from string import Template
 from awsglue.transforms import *
 from awsglue.utils import getResolvedOptions

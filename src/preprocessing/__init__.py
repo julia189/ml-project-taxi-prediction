@@ -1,1 +1,1 @@
-from .data_ingestion import athena_query
+from .dataingestion import athena_query

@@ -6,7 +6,8 @@
 from setuptools import setup, find_packages
  
 setup(
-    name="data_ingestion", #Name
+    setup_requires=['wheel'],
+    name="dataingestion", #Name
     version="1.0", #Version
     packages = find_packages()  # Automatically find the packages that are recognized in the '__init__.py'.
 )

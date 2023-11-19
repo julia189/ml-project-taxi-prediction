@@ -4,7 +4,7 @@ import boto3
 import time
 import logging
 from string import Template
-from data_ingestion import athena_query
+from dataingestion import athena_query
 from awsglue.transforms import *
 from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext

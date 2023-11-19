@@ -1,3 +1,4 @@
+import sys
 import datetime
 import boto3
 import time
@@ -14,6 +15,7 @@ args = getResolvedOptions(sys.argv, ["JOB_NAME"])
 sc = SparkContext()
 glueContext = GlueContext(sc)
 spark = glueContext.spark_session
+logger = glueContext.get_logger()
 job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 
@@ -24,8 +26,8 @@ db = "default"
 env = args.get("env", "dev")
 bucket = args.get("bucket", f"test-database-jh") 
 prefix = args.get("prefix", "data/ingestion_data/trips")
-start_date = args.get("start_date", (datetime.now() - pd.Timedelta(value=1, unit="day")).strftime("%Y-%m-%d"))
-end_date = datetime.now().strftime("%Y-%m-%d")
+# start_date = args.get("start_date", (datetime.now() - pd.Timedelta(value=1, unit="day")).strftime("%Y-%m-%d"))
+# end_date = datetime.now().strftime("%Y-%m-%d")
 
 
 try:
@@ -36,22 +38,20 @@ try:
                                  database_name=db,
                                  output_path=output_path,
                                  max_execution_sec=60)
-    for partition_ in partitions_df:
+    for partition_ in list(partitions_df):
         current_df = athena_query(client=client,
                         query_string=Template(sql_main_query).substitute(current_taxi_id=partition_),
                         database_name=db,
                         output_path=output_path,
                         max_execution_sec=30)
     if not current_df.empty:
-        print(f"Writing data to s3://{bucket}/{prefix}")
-        start = time.time()
+        logger.info(f"Writing data to s3://{bucket}/{prefix}")
         current_df.astype(str).to_parquet(
             f's3://{bucket}/{prefix}',
             partition_cols=["taxi_id"]
         )
+        logger.info(f"Number of rows: {current_df.shape[0]}")
 
 except Exception as e:
-    logging.exception("Failed when executing query with error:" , e)
+    logger.error("Failed when executing query with error:" , e)
 
-print(f"Number of rows: {current_df.shape[0]}")
-print(f"Data table queried at {datetime.now()}")

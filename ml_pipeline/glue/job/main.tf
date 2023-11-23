@@ -11,10 +11,10 @@ resource "aws_glue_job" "preprocessing-etl" {
 
  default_arguments = {
  "--enable-job-insights" = "true",
- "--additional-python-modules" = "datetime==5.3", #"s3://etl-glue-job-scripts/scripts/dataingestion-1.0-py3-none-any.whl,datetime==5.3",
+ "--additional-python-modules" = "datetime==5.3" #"s3://etl-glue-job-scripts/scripts/dataingestion-1.0-py3-none-any.whl,datetime==5.3",
  # aws --profile Terraform_Playground s3 cp ./src/preprocessing/dist/dataingestion-1.0-py3-none-any.whl s3://etl-glue-job-scripts/scripts/
  # "--extra-py-files" = "s3://etl-glue-job-scripts/scripts/dataingestion-1.0-py3-none-any.whl",
- "--python-modules-installer-option" = "--upgrade"
+ #"--python-modules-installer-option" = "--upgrade"
  }
 
  command {

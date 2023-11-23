@@ -71,8 +71,23 @@ def athena_query(client, query_string, database_name, output_path, max_execution
 
 try:
     
-    sql_query_partitions = "SELECT distinct(taxi_id) FROM default.raw_data"
-    sql_main_query = "SELECT * FROM default.raw_data WHERE taxi_id = $current_taxi_id"
+    sql_query_partitions = """
+    SELECT distinct cast(taxi_id as varchar) 
+    FROM default.raw_data
+    """
+    sql_main_query = """
+    SELECT 
+    trip_id, 
+    call_type,
+    origin_call,
+    origin_stand,
+    cast(taxi_id as varchar),
+    cast(timestamp as varchar),
+    day_type,
+    missing_data,
+    polyline,
+    weather
+    FROM default.raw_data WHERE cast (taxi_id as varchar) = $current_taxi_id"""
     logger.info("Executing first query")
     partitions_df = athena_query(client=athena_client,
                                  query_string=sql_query_partitions,
@@ -80,12 +95,12 @@ try:
                                  output_path=output_path,
                                  max_execution_sec=60)
     logger.info("Executing second query")
-    for partition_ in list(partitions_df):
+    for partition_ in set(partitions_df):
         current_df = athena_query(client=athena_client,
                         query_string=Template(sql_main_query).substitute(current_taxi_id=partition_),
                         database_name=db,
                         output_path=output_path,
-                        max_execution_sec=30)
+                        max_execution_sec=60)
         if not current_df.empty:
             logger.info(f"Writing data to s3://{bucket}/{prefix}")
             current_df.astype(str).to_parquet(

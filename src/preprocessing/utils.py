@@ -20,12 +20,10 @@ def convert_datatypes(data: pd.DataFrame, columns_datatypes_dict: dict) -> pd.Da
         if value == "int":
             data[key] = data[key].astype(int)
         elif value == "object":
-            data[key] = data[key].astype(object)
+            data[key] = data[key].apply(str)
         elif value == "datetime":
             data[key] = data[key].apply(
-                lambda value_unix: datetime.fromtimestamp(value_unix).strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
+                lambda value_unix: datetime.fromtimestamp(value_unix)
             )
     return data
 

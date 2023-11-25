@@ -17,6 +17,13 @@ awswrangler = "^3.4.2"
 shapely = "^2.0.2"
 geojson = "^3.1.0"
 imblearn = "^0.0"
+matplotlib = "^3.8.1"
+seaborn = "^0.13.0"
+pyspark = "^3.5.0"
+boto3 = "^1.29.2"
+logging = "^0.4.9.6"
+setuptools = "^68.2.2"
+wheel = "^0.41.3"
 
 
 [tool.poetry.group.test.dependencies]
@@ -28,6 +35,10 @@ flake8 = "^6.1.0"
 black = "^23.11.0"
 isort = "^5.12.0"
 mypy = "^1.7.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.26.0"
 
 [build-system]
 requires = ["poetry-core"]

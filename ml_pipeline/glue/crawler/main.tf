@@ -9,7 +9,7 @@ resource "aws_glue_crawler" "data-ingestion-crawler" {
   name          = "data-ingestion-crawler"
   role          = var.gluerole
   s3_target {
-    path = "s3://test-database-jh/data/ingestion_data/trips/"
+    path = "s3://test-database-jh/data/ingestion_data/trips_partitioned/"
   }
 }
 
